@@ -26,7 +26,7 @@ const App = () => {
   ]);
   function addExpenseData(data) {
     setExpenses((prevExpenses) => {
-      return prevExpenses.push(data);
+      return [data, ...prevExpenses];
     });
   }
   return (
