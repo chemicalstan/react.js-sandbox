@@ -10,7 +10,6 @@ const UsersList = (props) => {
   ));
   if (userItems.length === 0) userItems = <p>No User Added</p>;
 
-  console.log(userItems);
   return (
     <Card className={styles.users}>
       <ul>{userItems}</ul>
