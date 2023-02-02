@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import MoviesList from "./components/MoviesList";
 import "./App.css";
@@ -11,14 +11,12 @@ function App() {
   let content = <p>No Record Found</p>;
 
   if (movieList.length > 0) content = <MoviesList movies={movieList} />;
-  if (movieList.length > 0) content = <MoviesList movies={movieList} />;
   if (isLoading) content = <p>Loading...</p>;
   if (isError) content = <p>{isError}</p>;
 
-  const fetchMoviesHandler = async (e) => {
+  const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setIsError(null);
-    e.preventDefault();
     try {
       const response = await fetch("https://swapi.dev/api/films/");
 
@@ -38,7 +36,16 @@ function App() {
       setIsError(error.message);
     }
     setIsLoading(false);
-  };
+  }, []); // external states are added as dependencies
+
+  // It is important to pass the handler function as a dependecy incase it is uses on an external state
+  // If we choose to add the handler function as a dependecy, useCallback should used because the component would always be
+  // re-evaluated, creating an infinit loop since no two identical reference data types are thesame.
+  // useCallback stores the state of a function and only permits re-evaluation when a dependency within the function changes
+  useEffect(() => {
+    console.log("effect");
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
 
   return (
     <React.Fragment>
